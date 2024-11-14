@@ -19,8 +19,8 @@ const AddTenantLeaseAgreement = () => {
     try {
       const res = await axios.post(
         
-        `http://localhost:8080/api/v1/addTenantLeaseAgreement?landlordLeaseAgreementId=${landlordLeaseAgreementID}&propertyId=${propertyID}&tenantId=${customerID}`,
-        // `https://rma1-backend.onrender.com/api/v1/addLandlordLeaseProperty?propertyId=${propertyId}`,
+        // `http://localhost:8080/api/v1/addTenantLeaseAgreement?landlordLeaseAgreementId=${landlordLeaseAgreementID}&propertyId=${propertyID}&tenantId=${customerID}`,
+        `https://rma1-backend.onrender.com/api/v1/addLandlordLeaseProperty?landlordLeaseAgreementId=${landlordLeaseAgreementID}&propertyId=${propertyID}&tenantId=${customerID}`,
         values,
         {
           headers: {

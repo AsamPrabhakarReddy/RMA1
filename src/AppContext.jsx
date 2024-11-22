@@ -1,19 +1,20 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
-// Create a context
-const AppContext = createContext();
+const DetailsContext = createContext();
 
-// Create a provider component
-export const AppProvider = ({ children }) => {
-  const [tenantDetails, setTenantDetails] = useState(null);
-  const [landlordDetails, setLandlordDetails] = useState(null);
-
-  return (
-    <AppContext.Provider value={{ tenantDetails, setTenantDetails, landlordDetails, setLandlordDetails }}>
-      {children}
-    </AppContext.Provider>
-  );
+export const useDetails = () => {
+  return useContext(DetailsContext);
 };
 
-// Custom hook to use the app context
-export const useAppContext = () => useContext(AppContext);
+export const DetailsProvider = ({ children }) => {
+  const [details, setDetails] = useState({
+    tenantDetails: null,
+    landlordDetails: null,
+  });
+
+  return (
+    <DetailsContext.Provider value={{ details, setDetails }}>
+      {children}
+    </DetailsContext.Provider>
+  );
+};

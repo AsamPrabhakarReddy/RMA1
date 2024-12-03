@@ -22,7 +22,7 @@ const AddTenantLeaseAgreement = () => {
   const handleLeaseSubmit = async (values) => {
     try {
       const res = await axios.post(
-        `https://rma-backend-updated.onrender.com/api/v1/addTenantLeaseAgreement?landlordLeaseAgreementId=${landlordLeaseAgreementID}&propertyId=${propertyID}&tenantId=${customerID}`,
+        `http://localhost:8080/api/v1/addTenantLeaseAgreement?landlordLeaseAgreementId=${landlordLeaseAgreementID}&propertyId=${propertyID}&tenantId=${customerID}`,
         values,
         {
           headers: {

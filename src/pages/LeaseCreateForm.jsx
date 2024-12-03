@@ -5,18 +5,26 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import { FaRegEdit } from "react-icons/fa";
+import Clauses from "./Clauses";
+import Rules from "./Rules";
+import Disclosures from "./Disclosures";
+import Attachments from "./Attachments";
 
 const LeaseCreateForm = () => {
   const { propertyID } = useParams();
   const navigate = useNavigate();
 
   const [property, setProperty] = useState(null);
+  const [landlordDetails, setLandlordDetails] = useState(null);
+
+  const handleNavigation = () => {
+    navigate(`/profile/:${propertyID}`);
+  };
 
   const getPropertyDetails = async () => {
     try {
       const response = await axios.post(
-        // "http://localhost:8080/api/v1/getLeaseProperty",
-        "https://rma-backend-updated.onrender.com/api/v1/getLeaseProperty",
+        "http://localhost:8080/api/v1/getLeaseProperty",
         {
           propertyId: propertyID,
         }
@@ -32,9 +40,45 @@ const LeaseCreateForm = () => {
     }
   };
 
+
   useEffect(() => {
     getPropertyDetails();
   }, [propertyID]);
+
+  const getLandlordDetails = async()=>{
+    try{
+      const response = await axios.post("http://localhost:8080/api/v1/getLandlordDetailsInTenantDashboard",
+        {
+          propertyId: propertyID,
+        }
+      );
+
+      if (response.data) {
+        setLandlordDetails(response.data);
+      } else {
+        console.error("Failed to fetch landlord details");
+      }
+    } catch (error) {
+      console.error("Error fetching landlord details:", error);
+    }
+  }
+
+  useEffect(()=>{
+    getLandlordDetails();
+  },[propertyID]);
+
+  console.log("landlord details : ", landlordDetails);
+  const fullName = landlordDetails?.landlordDetails?.userId?.fullName;
+  const email = landlordDetails?.landlordDetails?.userId?.email;
+  const phonenumber = landlordDetails?.landlordDetails?.userId?.phoneNumber;
+  console.log("landlord details : ", fullName);
+  console.log("landlord details : ", email  );
+  console.log("landlord details : ", phonenumber  );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   const [activeItem, setActiveItem] = useState("lease term"); // Tracks the current section
   const [formData, setFormData] = useState({
@@ -883,147 +927,9 @@ const handleOptionChange = (option) => {
                   <h1 className="font-bold text-3xl text-mainColor">Clauses</h1>
                 </div>
                 
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-4 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">1. Rent</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="">The Lessee shall pay to the Lessor or Lessor's authorized agent, at the address set forth above, 
-                       or through Avail, or as changed by written notice to the Lessee, as rent for the Premises, parking, 
-                       or otherwise the sum as stated above. Rent is due and payable on the first day of each calendar month, 
-                       in advance. The timely payment of each installment of rent is deemed to be of the essence of this Lease. 
-                       The failure to pay rent when due may result in the Lessor bringing an action in court to recover unpaid 
-                       rent and/or possession.</p>  
-                     
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">2. Jointly and Severally Liable</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">Each Lessee is jointly and severally liable for the payment of rent and performance of all other terms of this agreement.</p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">3. Late Changes</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">Rent received by Lessor later than the 5th day after the due date, as specified in Paragraph 1 above, will incur a late charge. 
-                        The late charge shall be equal to . If Lessee mails rent to Lessor, the late charge will apply if the rent is received later than the 5th day of the month,
-                         regardless of the date Lessee mailed such rent payment. If a payment of rent is made by personal check which is later dishonored by the Lessee's bank,
-                          Lessee shall be assessed any bank charges incurred by Lessor as a result of such dishonored check, in addition to the rent and late charge due on the 
-                          payment of rent. The Lessor, at the Lessor's sole discretion, may waive the late charges.</p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">4. Security Deposit</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">Lessee has deposited with Lessor, the sum set forth above as a security deposit to be held by the Lessor in accordance with State 
-                        or local law or ordinance to secure the faithful performance by the Lessee of all of the provisions contained in this lease. If Lessee performs all of the 
-                        obligations as provided in this lease and pays all sums due Lessor, then Lessor, after the Lessee has surrendered possession of the Premises and delivered 
-                        the keys thereto to Lessor, shall refund said deposit to Lessee, including interest as provided by law. If Lessee has failed to perform or comply with any 
-                        of the provisions of the lease, then Lessor may apply all or any part of the security deposit in payment of any sums due from Lessee to Lessor, or to pay 
-                        for repair of any damages caused by Lessee, Lessee's co-occupants or guests. The security deposit shall not be treated as advance payment of rent, and the 
-                        Lessee shall not apply the security deposit as rent during the term of the lease unless Lessee obtains written permission from Lessor to do so. </p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">5. Possession</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">If Lessor cannot deliver possession of the Premises at the commencement of the lease term, the rent shall be abated until 
-                        the Premises are available for occupancy by Lessee. If Lessor does not notify Lessee that the Premises is ready for Lessee's occupancy within 10 days
-                         after the scheduled commencement date of the Term as set forth above, the Lessee may terminate this lease upon written notice to Lessor. Lessor shall
-                          not be liable to Lessee for any consequential damages to Lessee arising as a result of Lessor's inability to give Lessee possession of the Premises 
-                          at the commencement of the lease term. </p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">6. Condition of Premises</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">Lessee has examined the Premises prior to accepting the same and prior to the execution of this lease, and is satisfied with the 
-                        physical condition thereof, including but not limited to the heating, plumbing and smoke detectors. Lessee's acceptance of possession shall constitute 
-                        conclusive evidence of Lessee's receipt of the Premises in good order and repair as of the commencement of the lease term. Lessor or his agent has made 
-                        no promises as to condition or repair to Lessee, unless they are expressed in this lease or a rider attached hereto signed by Lessee and Lessor or his agent, 
-                        and no promises to decorate, alter or repair the Premises have been made by Lessor or his agent, unless expressed herein.</p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">7. Limitation of Liability</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">Except as provided by state or local law or ordinance, Lessor shall not be liable for any damage or injury caused by the negligence
-                         or acts of other Lessees, guest, or others at the building. </p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">8. Lessee to Maintain</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">Lessee shall keep the Premises and the fixtures and appliances therein in a clean and healthy condition, and in good working order, 
-                        and in accordance with any and all ordinances applicable to the tenancy, at Lessee's own expense, and upon the termination of this lease, for any reason, 
-                        Lessee shall return the Premises to Lessor in as good a condition of cleanliness and repair as at the commencement of this lease, reasonable wear and tear 
-                        excepted. Lessee shall make all necessary repairs to the Premises whenever damage has occurred or repairs are required due to Lessee's conduct or neglect.
-                        Lessee shall replace all broken glass and fixtures and shall maintain all smoke and carbon monoxide detectors in good condition at all times, including 
-                        replacing spent batteries as necessary. Upon Lessee vacating the Premises, if the Premises are not clean and in good repair, Lessor or his agent may replace
-                        the Premises in the same condition of repair and cleanliness as existed at the commencement of the lease term. Lessee agrees to pay Lessor for all expenses 
-                        incurred by Lessor in replacing the Premises in that condition. Lessee shall not cause or permit any waste, misuse or neglect to occur to the water, gas,
-                        utilities or any other portion of the Premises. </p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">9. Use of Premises</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">The Premises shall be occupied for residential purposes only, and only by the persons disclosed in this lease and on the Application
-                         for Lease submitted by Lessee in connection with the renting of the Premises. Lessee shall not engage in any activity, which will increase the rate of insurance 
-                         on the property. Lessee shall not allow trash to accumulate in the common areas of the Premises or allow objects to be thrown from windows. Lessee shall not hang 
-                         objects out of windows or place objects on windowsills or ledges, which may fall and injure persons below. Except for animals permitted under NY Civil Rights 
-                         Law § 47-b, Lessee shall not keep any pet in the Premises without written permission being first obtained from Lessor. Lessee shall not use porches for cooking,
-                         sleeping or storage of furniture, bicycles or other items of personal property. In no case shall Lessee allow porches or decks to be overloaded or occupied by
-                         more people than would be reasonably safe based on the condition of such porch or deck.</p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">10. Appliances</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">Lessee shall not install any air conditioning, heating or cooling equipment or dishwashers or clothes washers or dryers or other appliances 
-                        in any portion of the building or Premises occupied by Lessee without first obtaining Lessor's written permission to do so. All such appliances installed by Lessee 
-                        shall be maintained in good working order by Lessee and removed by Lessee at the expiration of the term of the lease. Any damage caused by appliances installed by 
-                        Lessee shall be the responsibility of Lessee and Lessee shall reimburse Lessor for the cost of repair of any damage caused by such appliances.</p>  
-                    
-                </div>
-
-                <div className="shadow-md p-2 mb-2 mt-2 flex flex-col gap-2 bg-gray-100 rounded-lg">
-                    <div className="mb-4 flex justify-between">
-                        <label className="block font-bold text-2xl text-gray-700">11. Disturbance</label>
-                        <span className="text-xl cursor-pointer"><FaRegEdit /></span>
-                    </div>
-                    <p className="text-gray-600">Lessee agrees not to play televisions, radios or musical instruments or musical playback equipment in a manner which disturbs other tenants, 
-                        and shall maintain the volume of such equipment at reasonable levels. In addition, Lessee agrees to limit playing of such equipment between the hours of 10:00 p.m. 
-                        and 7:00 a.m. to a volume that cannot be heard by persons outside of the Premises.</p>  
-                    
-                </div>
+                
+              <Clauses/>
+                
 
                 <div className="flex justify-between mt-[50px]">
                         <button
@@ -1057,6 +963,34 @@ const handleOptionChange = (option) => {
               <div className="shadow-box p-6 border rounded-lg bg-white">
                 <div className="mb-4">
                   <h1 className="font-bold text-3xl text-mainColor">Rules</h1>
+                  
+                  <Rules/>
+                
+
+                <div className="flex justify-between mt-[50px]">
+                        <button
+                            onClick={() => setActiveItem(menuItems[menuItems.indexOf(activeItem) - 1])}
+                            className="mt-6 bg-mainColor text-white p-2 w-[100px] rounded-lg"
+                        >
+                            Back
+                        </button>
+                        <button
+                            onClick={handleNext}
+                            className="mt-6 bg-mainColor text-white p-2 w-[100px] rounded-lg"
+                        >
+                            Next
+                        </button>
+                    </div>
+
+
+                {/* Terms of Use */}
+                <div className="text-center p-4 text-sm text-gray-600">
+                    <p>Your use lease tools is subject to our <span className="text-mainColor underline text-xl cursor-pointer ">Terms of use.</span> Lease templates and their 
+                    contents are not guarented, may not be suitable for your circumstances, and should be independently verified with your professional advisors
+                    prior to use.
+                    </p>
+                </div>
+
                 </div>
                
                
@@ -1069,6 +1003,30 @@ const handleOptionChange = (option) => {
                   <h1 className="font-bold text-3xl text-mainColor">Disclosures</h1>
                 </div>
                 {/* Disclosures Form */}
+                <Disclosures/>
+                <div className="flex justify-between mt-[50px]">
+                    <button
+                      onClick={() => setActiveItem(menuItems[menuItems.indexOf(activeItem) - 1])}
+                      className="mt-6 bg-mainColor text-white p-2 w-[100px] rounded-lg"
+                    >       
+                        Back
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="mt-6 bg-mainColor text-white p-2 w-[100px] rounded-lg"
+                    >
+                       Next
+                    </button>    
+                </div>
+
+                {/* Terms of Use */}
+                <div className="text-center p-4 text-sm text-gray-600">
+                    <p>Your use lease tools is subject to our <span className="text-mainColor underline text-xl cursor-pointer ">Terms of use.</span> Lease templates and their 
+                    contents are not guarented, may not be suitable for your circumstances, and should be independently verified with your professional advisors
+                    prior to use.
+                    </p>
+                </div>
+
               </div>
             );
           case "attachments":
@@ -1076,26 +1034,178 @@ const handleOptionChange = (option) => {
               <div className="shadow-box p-6 border rounded-lg bg-white">
                 <div className="mb-4">
                   <h1 className="font-bold text-3xl text-mainColor">Attachments</h1>
+                  <Attachments/>
+
+                  <div className="flex justify-between mt-[50px]">
+                    <button
+                      onClick={() => setActiveItem(menuItems[menuItems.indexOf(activeItem) - 1])}
+                      className="mt-6 bg-mainColor text-white p-2 w-[100px] rounded-lg"
+                    >       
+                        Back
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="mt-6 bg-mainColor text-white p-2 w-[100px] rounded-lg"
+                    >
+                       Next
+                    </button>    
+                </div>
+
+                {/* Terms of Use */}
+                <div className="text-center p-4 text-sm text-gray-600">
+                    <p>Your use lease tools is subject to our <span className="text-mainColor underline text-xl cursor-pointer ">Terms of use.</span> Lease templates and their 
+                    contents are not guarented, may not be suitable for your circumstances, and should be independently verified with your professional advisors
+                    prior to use.
+                    </p>
+                </div>
+
+                
                 </div>
                 {/* Attachments Form */}
               </div>
             );
+
           case "lessor info":
             return (
               <div className="shadow-box p-6 border rounded-lg bg-white">
+                <div className="">
                 <div className="mb-4">
-                  <h1 className="font-bold text-3xl text-mainColor">Lessor Info</h1>
+                  <h1 className="font-bold text-3xl text-gray-700">Your Contact Information</h1>
+                  <div className="m-3 flex flex-col gap-4">
+                      <div className="shadow-lg p-4 text-xl rounded-lg">If you would like to change the name, phone, or email address associated with this account, please do so from within your <span onClick={handleNavigation} className="underline text-mainColor cursor-pointer font-bold">Account Settings.</span></div>
+                      <div className="flex gap-4 w-full justify-between">
+                        <div className="w-1/2">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                            <input type="text" id="name" value={fullName} readOnly class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name" required />
+                        </div>
+                        <div className="w-1/2">
+                            <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                            <input type="email" id="email" value={email}  readOnly class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email" required />
+
+                            </div>           
+                        </div>
+                      </div> 
+                      <div className="w-full">
+                        <label for="phonenumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
+                        <input type="number" id="email"  value={phonenumber} readOnly class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="phone number" required />
+                      </div>
+                 </div> 
+
+                  <div className="py-5">
+                    <h1 className="font-bold text-3xl text-gray-700">Company Info</h1>
+                    <div className="m-3 flex flex-col gap-4">
+                        <div className="shadow-lg p-4 text-xl rounded-lg">If you prefer not to have your personal name and phone number on the lease, you can enter your company information, which will be used instead. Your personal phone is still required to help us prevent fraud.</div>
+          
+                        <div className="w-full">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Name</label>
+                            <input type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name" required />
+                        </div>                      
+                        <div className="w-full">
+                          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Phone</label>
+                          <input type="number" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email" required />
+                        </div>
+                    </div> 
+                  </div>
+
+                 <div className="py-5 flex flex-col gap-4">
+                  <h1 className="font-bold text-3xl text-gray-700">Emergency Line (optional)</h1>
+                  <div className="w-full space-y-2">
+                      <label for="name" class="block mb-2 text-lg  text-gray-500 dark:text-white">Phone where tenants can reach someone in a maintenance emergency</label>
+                      <input type="number" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="000-000-0000" required />
+                    </div>
+                  </div>
+
+                  <div className="py-5 flex flex-col gap-4">
+                    <h1 className="font-bold text-3xl text-gray-700">Lessor Address (Home or Business)</h1>
+                    <h1 className=" text-xl text-gray-500">A lessor address is required on all leases.</h1>
+                    <div className="w-full space-y-2">
+                      <label for="name" class="block mb-2 text-lg  text-gray-500 dark:text-white">Start typing the street address</label>
+                      <input type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="start typing ..." required />
+                    </div> 
+                  </div>
+
+
+                  <div className="flex justify-between mt-[50px]">
+                    <button
+                      onClick={() => setActiveItem(menuItems[menuItems.indexOf(activeItem) - 1])}
+                      className="mt-6 bg-mainColor text-white p-2 w-[100px] rounded-lg"
+                    >       
+                        Back
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="mt-6 bg-mainColor text-white p-2 w-[150px] rounded-lg"
+                    >
+                      Save & Next
+                    </button>    
+                  </div>
+
+                   {/* Terms of Use */}
+                  <div className="text-center p-4 text-sm text-gray-600">
+                      <p>Your use lease tools is subject to our <span className="text-mainColor underline text-xl cursor-pointer ">Terms of use.</span> Lease templates and their 
+                      contents are not guarented, may not be suitable for your circumstances, and should be independently verified with your professional advisors
+                      prior to use.
+                      </p>
+                  </div>
+
+                </div>
                 </div>
                 {/* Lessor Info Form */}
               </div>
             );
+
           case "terms agreement":
             return (
               <div className="shadow-box p-6 border rounded-lg bg-white">
-                <div className="mb-4">
-                  <h1 className="font-bold text-3xl text-mainColor">Terms Agreement</h1>
+                <div className="mb-4 flex flex-col shadow-lg p-4 gap-6">
+                 
+                  <div className="text-2xl font-semibold text-mainColor">Please agree to the following before creating your lease.</div>
+                  <div className="text-xl text-gray-600">By clicking "I agree", you acknowledge that you have read, understand, have had the opportunity to consult with counsel of your choosing, 
+                    and agree to the <span className="cursor-pointer text-blue-900 text-2xl font-bold" onClick={handleOpenModal}>provisions</span> stated herein.</div>
                 </div>
-                {/* Terms Agreement Form */}
+
+                 {/* Modal */}
+                      {isModalOpen && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 ">
+                          <div className="bg-white shadow-lg rounded-lg relative w-1/2 max-h-[80vh] overflow-y-scroll py-20">
+                            {/* Close Button */}
+                            <button
+                              className="absolute top-4 right-4 text-gray-600 hover:text-black p-8  text-3xl"
+                              onClick={handleCloseModal}
+                            >
+                              ✖
+                            </button>
+                            
+                            {/* Modal Content */}
+                            <div className="p-6">
+                              <p className="text-xl">
+                                The law firm of Gordon & Rees Scully Mansukhani, LLP (the "Firm") has prepared example residential leases ("Forms") for
+                                publication on the Rentals site. These Forms are merely to provide information and examples for self-help purposes. 
+                                The Firm strives to keep the Forms accurate, current and up-to-date. However, because the law changes rapidly, 
+                                the Firm cannot guarantee that all of the information on the Rentals site is completely current. The law is different from jurisdiction to jurisdiction, and may be subject to interpretation by different courts. The law is a personal matter, and no Forms like the kind published on the Rentals site can fit every circumstance. Furthermore, the Forms are not legal advice and are not guaranteed to be correct, complete or up-to-date. Therefore, if you need legal advice for your specific problem, 
+                                you must consult a licensed attorney in your area. Except as part of a Firm Legal Engagement (defined below), we do not review any information you input on the Forms for legal accuracy or sufficiency, draw legal conclusions, provide opinions about your selection of forms, or apply the law to the facts of your situation. If you need legal advice for a specific problem, you should consult with a licensed attorney. Use of the Forms or any other legal information published on the Rentals site is not a substitute for legal advice from a qualified attorney licensed to practice in an appropriate jurisdiction. Communications between you, the Firm, and/or Rentals may not be protected as privilege communications under the attorney-client privilege or work product doctrine. Also, if you submit questions to the Firm or Rentals, the communications between you and the individual who answers your question may not be protected as privileged communications under the attorney-client privilege or work product doctrine. Your use of the Forms does not create an attorney-client relationship between you and Gordon & Rees Scully Mansukhani, LLP, or between you and any Gordon & Rees Scully Mansukhani, LLP employee or representative, unless you specifically enter into a Legal Services Agreement executed by an authorized partner of the Firm. Unless you are otherwise represented by an attorney, including any external attorney, you represent yourself in any legal matter you undertake through use of our Forms.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+
+                    <div className="flex justify-between mt-[30px]">
+                    <button
+                      onClick={() => setActiveItem(menuItems[menuItems.indexOf(activeItem) - 1])}
+                      className="mt-6 bg-mainColor text-white p-2 w-[100px] rounded-lg"
+                    >       
+                        Back
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="mt-6 bg-mainColor text-white p-2 w-[150px] rounded-lg"
+                    >
+                      I Agree
+                    </button>    
+                  </div>
               </div>
             );
           default:

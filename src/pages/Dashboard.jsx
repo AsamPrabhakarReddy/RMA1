@@ -21,9 +21,8 @@ const Dashboard = () => {
   const getCustomerInfo = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/getUserData",
-        // https://rma1-backend.onrender.com
-        // "https://rma1-backend.onrender.com/api/v1/getUserData",
+        // "http://localhost:8080/api/v1/getUserData",
+        "https://rma-backend-updated-p30c.onrender.com/api/v1/getUserData",
         { userId: user?._id },
 
         {
@@ -62,8 +61,8 @@ const Dashboard = () => {
   const getProperties = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/getProperties",
-        // "https://rma1-backend.onrender.com/api/v1/getProperties",
+        // "http://localhost:8080/api/v1/getProperties",
+        "https://rma-backend-updated-p30c.onrender.com/api/v1/getProperties",
         { userId: params.id },
         {
           headers: {
@@ -103,8 +102,8 @@ console.log("properties log :: ", properties);
   const getAllActiveProperties = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/v1/getAllActiveProperties",
-        // "https://rma1-backend.onrender.com/api/v1/getAllActiveProperties",
+        // "http://localhost:8080/api/v1/getAllActiveProperties",
+        "https://rma-backend-updated-p30c.onrender.com/api/v1/getAllActiveProperties",
         { userId: params.id },
         {
           headers: {
@@ -148,8 +147,8 @@ console.log("properties log :: ", properties);
     console.log("tenant id: ", customer._id);
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/getLandlordLeaseTerms",
-        // "https://rma1-backend.onrender.com/api/v1/getLandlordLeaseTerms",
+        // "http://localhost:8080/api/v1/getLandlordLeaseTerms",
+        "https://rma-backend-updated-p30c.onrender.com/api/v1/getLandlordLeaseTerms",
         { propertyId }, 
         {
           headers: {

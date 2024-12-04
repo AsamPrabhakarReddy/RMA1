@@ -32,7 +32,7 @@ const Attachments = () => {
 
         <div className='flex justify-between'>
             <div className='flex flex-col gap-1'>
-                <h1 className='text-xl '>Georgia State Sprinkler Disclosure</h1>
+                <h1 className='text-xl '>New York State Sprinkler Disclosure</h1>
                 <div className='flex gap-2'>
                     <h1 className='text-xl text-gray-400 cursor-pointer hover:text-black'>Rename</h1>
                     {/* <div className='w-1 bg-blue-900 h-6'></div> */}
@@ -50,7 +50,7 @@ const Attachments = () => {
 
         <div className='flex justify-between'>
             <div className='flex flex-col gap-1'>
-                <h1 className='text-xl '>Georgia State Rent Stabilized Units</h1>
+                <h1 className='text-xl '>New York State Rent Stabilized Units</h1>
                 <div className='flex gap-2'>
                     <h1 className='text-xl text-gray-400 cursor-pointer hover:text-black'>Rename</h1>
                     {/* <div className='w-1 bg-blue-900 h-6'></div> */}
@@ -86,7 +86,7 @@ const Attachments = () => {
 
         <div className='flex justify-between'>
             <div className='flex flex-col gap-1'>
-                <h1 className='text-xl '>Georgia State Fair Housing Guide</h1>
+                <h1 className='text-xl '>New York State Fair Housing Guide</h1>
                 <div className='flex gap-2'>
                     <h1 className='text-xl text-gray-400 cursor-pointer hover:text-black'>Rename</h1>
                     {/* <div className='w-1 bg-blue-900 h-6'></div> */}
@@ -104,7 +104,7 @@ const Attachments = () => {
 
         <div className='flex justify-between'>
             <div className='flex flex-col gap-1'>
-                <h1 className='text-xl '>Georgia State Security Deposit Holdings Disclosure</h1>
+                <h1 className='text-xl '>New York State Security Deposit Holdings Disclosure</h1>
                 <div className='flex gap-2'>
                     <h1 className='text-xl text-gray-400 cursor-pointer hover:text-black'>Rename</h1>
                     {/* <div className='w-1 bg-blue-900 h-6'></div> */}

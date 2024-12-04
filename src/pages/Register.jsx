@@ -44,9 +44,9 @@ const Register = () => {
       // Make API request to register the user
       axios
         .post(
-          
-          // "http://localhost:8080/api/v1/registerUser",
-          "https://rma-backend-updated-p30c.onrender.com/api/v1/registerUser",
+          // "https://backend-six-kappa-64.vercel.app/auth/register",
+          "http://localhost:8080/api/v1/registerUser",
+          // "https://rma1-backend.onrender.com/api/v1/registerUser",
           {
             email,
             password,

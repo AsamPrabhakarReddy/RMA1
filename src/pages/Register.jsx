@@ -46,7 +46,7 @@ const Register = () => {
         .post(
           
           // "http://localhost:8080/api/v1/registerUser",
-          "https://rma-backend-updated.onrender.com/api/v1/registerUser",
+          "https://rma1-backend-9a0v.onrender.com/api/v1/registerUser",
           {
             email,
             password,

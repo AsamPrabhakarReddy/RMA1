@@ -17,7 +17,7 @@ const AddLeaseAgreement = () => {
     try {
       const res = await axios.post(
         // `http://localhost:8080/api/v1/addLandlordLeaseProperty?propertyId=${propertyId}`,
-        `https://rma-backend-updated.onrender.com/api/v1/addLandlordLeaseProperty?propertyId=${propertyId}`,
+        `https://rma1-backend-9a0v.onrender.com/api/v1/addLandlordLeaseProperty?propertyId=${propertyId}`,
         values,
         {
           headers: {
